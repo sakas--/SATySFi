@@ -13,9 +13,10 @@ let k_fail chkpt =
   match chkpt with
   | I.HandlingError(penv) ->
       let (lposS, lposE) = I.positions penv in
+      let file_name = lposS.Lexing.pos_fname in
       let cnumS = lposS.Lexing.pos_cnum - lposS.Lexing.pos_bol in
       let cnumE = lposE.Lexing.pos_cnum - lposE.Lexing.pos_bol in
-      let rng = Range.make lposS.Lexing.pos_lnum cnumS cnumE in
+      let rng = Range.make file_name lposS.Lexing.pos_lnum cnumS cnumE in
       raise (Error(rng))
 
   | _ -> assert false

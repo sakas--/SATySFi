@@ -49,10 +49,11 @@
   let get_pos lexbuf =
     let posS = Lexing.lexeme_start_p lexbuf in
     let posE = Lexing.lexeme_end_p lexbuf in
+    let file_name = posS.Lexing.pos_fname in
     let lnum = posS.Lexing.pos_lnum in
     let cnumS = posS.Lexing.pos_cnum - posS.Lexing.pos_bol in
     let cnumE = posE.Lexing.pos_cnum - posE.Lexing.pos_bol in
-      Range.make lnum cnumS cnumE
+      Range.make file_name lnum cnumS cnumE
 
   let report_error lexbuf errmsg =
     let rng = get_pos lexbuf in
