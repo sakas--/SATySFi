@@ -113,6 +113,19 @@
         | c   -> aux imax (i + 1) acclst (accstr ^ (String.make 1 c))
     in
       aux (String.length tokstr) 0 [] ""
+
+
+  let create_lexbuf file_path_in =
+    let file_in = open_in file_path_in in
+    reset_to_progexpr ();
+    let lexbuf = Lexing.from_channel file_in in
+    lexbuf.Lexing.lex_curr_p <- {
+        Lexing.pos_fname = Logging.show_path file_path_in;
+        pos_lnum = 1;
+        pos_bol = 0;
+        pos_cnum = 0;
+      };
+    lexbuf
 }
 
 let space = [' ' '\t']

@@ -89,9 +89,8 @@ let rec register_library_file (pkgdir : file_path) (dg : file_info FileDependenc
   begin
     Logging.begin_to_parse_file file_path_in;
     let curdir = Filename.dirname file_path_in in
-    let file_in = open_in file_path_in in
-    Lexer.reset_to_progexpr ();
-    let (header, utast) = ParserInterface.process (Lexing.from_channel file_in) in
+    let lexbuf = Lexer.create_lexbuf file_path_in in
+    let (header, utast) = ParserInterface.process lexbuf in
     FileDependencyGraph.add_vertex dg file_path_in (LibraryFile(utast));
     header |> List.iter (fun headerelem ->
       let file_path_sub = make_absolute_path pkgdir curdir headerelem in
@@ -185,10 +184,9 @@ let unfreeze_environment ((valenv, stenvref, stmap) : frozen_environment) : envi
 let register_document_file (pkgdir : file_path) (dg : file_info FileDependencyGraph.t) (file_path_in : file_path) : unit =
   begin
     Logging.begin_to_parse_file file_path_in;
-    let file_in = open_in file_path_in in
     let curdir = Filename.dirname file_path_in in
-    Lexer.reset_to_progexpr ();
-    let (header, utast) = ParserInterface.process (Lexing.from_channel file_in) in
+    let lexbuf = Lexer.create_lexbuf file_path_in in
+    let (header, utast) = ParserInterface.process lexbuf in
     FileDependencyGraph.add_vertex dg file_path_in (DocumentFile(utast));
     header |> List.iter (fun headerelem ->
       let file_path_sub = make_absolute_path pkgdir curdir headerelem in
